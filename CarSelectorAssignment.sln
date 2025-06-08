@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.36105.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarSelector.API", "CarSelector.API\CarSelector.API.csproj", "{D1AADE1E-579D-4092-B9D9-F8AF69A55423}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarSelector.Infrastructure", "CarSelector.Infrastructure\CarSelector.Infrastructure.csproj", "{0506C973-379B-420C-8445-5223AB4ECC08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarSelector.Application", "CarSelector.Application\CarSelector.Application.csproj", "{64CE9EB4-3649-4DF5-9F5A-49B304676036}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarSelector.Web", "CarSelector.Web\CarSelector.Web.csproj", "{328C8451-F1C0-41CE-8462-35B5D32A4CB1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		C:\Users\DeyaAlomari\Downloads\docker-compose.yml = C:\Users\DeyaAlomari\Downloads\docker-compose.yml
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1AADE1E-579D-4092-B9D9-F8AF69A55423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1AADE1E-579D-4092-B9D9-F8AF69A55423}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1AADE1E-579D-4092-B9D9-F8AF69A55423}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1AADE1E-579D-4092-B9D9-F8AF69A55423}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0506C973-379B-420C-8445-5223AB4ECC08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0506C973-379B-420C-8445-5223AB4ECC08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0506C973-379B-420C-8445-5223AB4ECC08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0506C973-379B-420C-8445-5223AB4ECC08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64CE9EB4-3649-4DF5-9F5A-49B304676036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64CE9EB4-3649-4DF5-9F5A-49B304676036}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64CE9EB4-3649-4DF5-9F5A-49B304676036}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64CE9EB4-3649-4DF5-9F5A-49B304676036}.Release|Any CPU.Build.0 = Release|Any CPU
+		{328C8451-F1C0-41CE-8462-35B5D32A4CB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{328C8451-F1C0-41CE-8462-35B5D32A4CB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{328C8451-F1C0-41CE-8462-35B5D32A4CB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{328C8451-F1C0-41CE-8462-35B5D32A4CB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C737916D-1CE7-48C3-BC60-603CE54C738C}
+	EndGlobalSection
+EndGlobal

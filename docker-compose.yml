@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: CarSelector.API/Dockerfile
+    ports:
+      - "5077:8080"
+    environment:
+      - NhtsaBaseUrl=https://vpic.nhtsa.dot.gov/api/vehicles/
+    networks:
+      - carselector-net
+
+  web:
+    build:
+      context: .
+      dockerfile: CarSelector.Web/Dockerfile
+    ports:
+      - "5080:8080"
+    environment:
+      - CarApiBaseUrl=http://api:8080/api/Vehicles/
+    depends_on:
+      - api
+    networks:
+      - carselector-net
+
+networks:
+  carselector-net:
+    driver: bridge

@@ -1,0 +1,214 @@
+﻿ <link href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+<div class="container mt-3">
+    
+    <div class="alert alert-danger d-none mt-2" id="alert" role="alert"></div>
+    <h2 class="h2">Vehicle Model Finder</h2>
+    <div class="card">
+        <div class="card-body">
+            <form method="post" id="carForm">
+        <div class="mb-3">
+            <label for="makeSelect" class="form-label">Car Make</label>
+            <select id="makeSelect" name="SelectedMake" class="form-select select2" required>
+                <option value="">-- Select Make --</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="yearPicker" class="form-label">Manufacture Year</label>
+            <input type="text" id="yearPicker" class="form-control" name="SelectedYear"  placeholder="YYYY" autocomplete="off" disabled />
+        </div>
+
+        <div class="mb-3">
+            <label for="vehicleTypeSelect" class="form-label">Vehicle Type</label>
+            <select id="vehicleTypeSelect" name="SelectedType" class="form-select select2" disabled>
+                <option value="">-- Select Vehicle Type --</option>
+            </select>
+        </div>
+
+                <button type="submit" id="submitBtn" class="btn btn-primary">Find Models</button>
+    </form>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-4 d-none" id="modelsCard">
+        <div class="card-body">
+            <h3 class="mt-1">Models</h3>
+            <table id="modelsTable" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Model Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filled by jQuery -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+           Loadmake();
+
+            $('.select2').select2({
+                theme: "bootstrap-5",
+                width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+                placeholder: $( this ).data( 'placeholder' ),
+                allowClear: true});
+
+            $('#yearPicker').datepicker({
+                format: "yyyy",
+                viewMode: "years",
+                minViewMode: "years",
+                autoclose: true,
+                startDate: new Date(1995, 0, 1)
+            });
+
+             $('#makeSelect, #vehicleTypeSelect, #yearPicker').on('change', function () {
+             $('#alert').addClass('d-none').text('');
+             });
+
+            $('#makeSelect').on('change', async function () {
+                const make = this.value;
+                const vehicleTypeSelect = $('#vehicleTypeSelect');
+
+                vehicleTypeSelect.prop('disabled', true).empty().append(new Option('Loading...', ''));
+                if (make) {
+                    $('#yearPicker').prop('disabled', false);
+                    const response = await fetch(`/Home/GetVehicleTypes?makeId=${encodeURIComponent(make)}`);
+                    const types = await response.json();
+                    if(types.success){
+                    vehicleTypeSelect.empty().append(new Option('-- Select Vehicle Type --', ''));
+                    types.data.forEach(type => {
+                        vehicleTypeSelect.append(new Option(type, type));
+                    });
+                    vehicleTypeSelect.prop('disabled', false).trigger('change.select2');
+                    }
+                    else
+                    {
+                        vehicleTypeSelect.empty().append(new Option('-- Select Vehicle Type --', ''));
+                    }
+                } else {
+                    vehicleTypeSelect.empty().append(new Option('-- Select Vehicle Type --', ''));
+                }
+            });
+
+            $('#carForm').on('submit', function (e) {
+            e.preventDefault();
+
+            const make = $('#makeSelect').val();
+            const type = $('#vehicleTypeSelect').val();
+            const year = $('#yearPicker').val();
+
+            if (!make)
+            {
+                showError("Car make is required.");
+                return;
+            }
+
+            if (!type && !year)
+            {
+                showError("Please select at least a year or a vehicle type.");
+                return;
+            }
+
+            $.ajax({
+                url: '/Home/FindModels',
+                method: 'POST',
+                data: {
+                    SelectedMake: make,
+                    SelectedType: type,
+                    SelectedYear: year
+                },
+                success: function (result) {
+                    if(!result.success)
+                    {
+                        showError(result.message);
+                    }
+                    else
+                    {
+                        renderModelsTable(result.data);
+
+                    }
+                },
+                error: function () {
+                    showError(["Something went wrong. Please try again."]);
+                }
+            });
+        });
+
+      
+
+        });
+          function showError(messages) {
+               $('#alert')
+                .removeClass('d-none')
+                .text(messages);
+        }
+        async function Loadmake(){
+            const makeSelect = $('#makeSelect');
+            makeSelect.empty().append(new Option('Loading...', ''));
+
+            const response = await fetch(`/Home/GetMakes`);
+            const makes = await response.json();
+                if(!makes.success)
+                {
+                    makeSelect.empty().append(new Option('-- Select Make --', ''));
+                    showError(makes.message);
+                    return
+                }
+                else
+                {
+                    makeSelect.empty().append(new Option('-- Select Make --', ''));
+                    makes.data.forEach(make => {
+                        makeSelect.append(new Option(make.name, make.id));
+                    });
+                }
+        }
+        function renderModelsTable(models) {
+            if ($.fn.DataTable.isDataTable('#modelsTable')) {
+                $('#modelsTable').DataTable().destroy();
+            }
+
+            const $tbody = $('#modelsTable tbody');
+            $tbody.empty();
+
+            models.forEach((model, index) => {
+                $tbody.append(`
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${model}</td>
+                    </tr>
+                `);
+            });
+
+            $('#modelsCard').removeClass('d-none');
+
+
+            // Initialize DataTable
+            $('#modelsTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true
+            });
+        }
+      
+    </script>
+}
+
+
